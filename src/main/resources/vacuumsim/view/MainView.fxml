@@ -12,10 +12,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: #f1f2f6;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vacuumsim.controller.SimulationController">
+<BorderPane prefHeight="720.0" prefWidth="1050.0" style="-fx-background-color: #f1f2f6;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vacuumsim.controller.SimulationController">
 
    <left>
       <VBox prefWidth="250.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #dcdde1; -fx-border-width: 0 1 0 0;" BorderPane.alignment="CENTER">
@@ -73,7 +74,7 @@
                      </columnConstraints>
                      <children>
                         <Label text="Yön:" />
-                        <Label fx:id="lblYon" text="Kuzey" textFill="#e17055" GridPane.columnIndex="1">
+                        <Label fx:id="lblYon" text="DOGU" textFill="#e17055" GridPane.columnIndex="1">
                            <font><Font name="System Bold" size="12.0" /></font></Label>
                         <Label text="Batarya:" GridPane.rowIndex="1" />
                         <Label fx:id="lblBatarya" text="100%" textFill="#00b894" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -102,25 +103,25 @@
    </left>
 
    <center>
-      <VBox style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+            <StackPane style="-fx-background-color: #dfe6e9;" VBox.vgrow="ALWAYS">
                <children>
-                  <Pane fx:id="ortaOyunAlani" style="-fx-background-color: #ffffff; -fx-border-color: #bdc3c7; -fx-border-width: 2;" />
+                  <Pane fx:id="ortaOyunAlani" style="-fx-background-color: #ffffff; -fx-border-color: #b2bec3; -fx-border-width: 3; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 5);" />
                </children>
-            </HBox>
+            </StackPane>
 
-            <HBox alignment="CENTER" minHeight="50.0" prefHeight="50.0" spacing="25.0" style="-fx-background-color: #2d3436; -fx-border-color: #222f3e; -fx-border-width: 2 0 0 0;">
+            <HBox alignment="CENTER" minHeight="50.0" prefHeight="50.0" spacing="35.0" style="-fx-background-color: #2d3436; -fx-border-color: #222f3e; -fx-border-width: 2 0 0 0;">
                <children>
-                  <Label text="Toplam Alan: 0" textFill="WHITE">
+                  <Label fx:id="lblToplamAlan" text="Toplam Alan: 0 m²" textFill="WHITE">
                      <font><Font name="System Bold" size="13.0" /></font></Label>
-                  <Label text="Temizlenen: 0" textFill="WHITE">
+                  <Label fx:id="lblTemizlenenAlan" text="Temizlenen: 0 m²" textFill="WHITE">
                      <font><Font name="System Bold" size="13.0" /></font></Label>
-                  <Label text="Kalan: 0" textFill="WHITE">
+                  <Label fx:id="lblKalanAlan" text="Kalan: 0 m²" textFill="WHITE">
                      <font><Font name="System Bold" size="13.0" /></font></Label>
-                  <Label text="Geçen Süre: 00:00" textFill="#fdcb6e">
+                  <Label fx:id="lblGecenSure" text="Geçen Süre: 00:00" textFill="#fdcb6e">
                      <font><Font name="System Bold" size="13.0" /></font></Label>
-                  <Label text="Toz: 0" textFill="WHITE">
+                  <Label fx:id="lblToplananToz" text="Toz: 0" textFill="WHITE">
                      <font><Font name="System Bold" size="13.0" /></font></Label>
                </children>
                <padding>
@@ -130,4 +131,5 @@
          </children>
       </VBox>
    </center>
+
 </BorderPane>
