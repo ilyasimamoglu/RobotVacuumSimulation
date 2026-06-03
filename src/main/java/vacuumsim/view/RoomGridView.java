@@ -4,16 +4,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Line;
 import vacuumsim.model.Robot;
 import vacuumsim.model.Room;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ============================================================================
  * SINIF: RoomGridView (Görünüm / View Katmanı)
  * GÖREVİ: MVC mimarisindeki "V" (View) katmanıdır. Sadece ekrana çizim yapar.
  * Izgarayı (matrisi) oluşturur, hücreleri boyar ve robotu sahnede kaydırır.
- * İçerisinde hiçbir mantıksal karar, oyun döngüsü veya hesaplama barındırmaz.
- * Uygulamanın sadece "Ressam" görevini üstlenir.
+ * MVC Uyum: Artık renkleri doğrudan Room modeline göre belirler.
  * ============================================================================
  */
 public class RoomGridView {
@@ -23,6 +26,11 @@ public class RoomGridView {
     private double hucreBoyutu;
     private Rectangle[][] hucreler;
     private Circle gorselRobot;
+
+    // Robotun arkasında bırakacağı hareket izi (path/trail) için değişkenler
+    private List<Line> hareketIzleri = new ArrayList<>();
+    private double sonRobotX = -1;
+    private double sonRobotY = -1;
 
     public RoomGridView(Pane oyunAlani, Room oda, double hucreBoyutu) {
         this.oyunAlani = oyunAlani;
@@ -39,14 +47,54 @@ public class RoomGridView {
 
     public Rectangle hucreOlustur(int satir, int sutun) {
         Rectangle kare = new Rectangle(hucreBoyutu, hucreBoyutu);
-        kare.setFill(Color.web("#faebd7"));
         kare.setStroke(Color.LIGHTGRAY);
         kare.setX(sutun * hucreBoyutu);
         kare.setY(satir * hucreBoyutu);
 
         hucreler[satir][sutun] = kare;
         oyunAlani.getChildren().add(kare);
+
+        // Başlangıç rengini modeldeki hücre türüne göre çiziyoruz (Örn: şarj istasyonu)
+        hucreYenile(satir, sutun, oda.getHucreTuru(sutun, satir));
+
         return kare;
+    }
+
+    // Modelden gelen hücre türüne göre arayüzdeki kareyi boyar
+    public void hucreYenile(int satir, int sutun, Room.HucreTuru tur) {
+        Rectangle kare = hucreler[satir][sutun];
+        switch (tur) {
+            case TEMIZ:
+                kare.setFill(Color.web("#faebd7")); // Antik Beyaz (Başlangıç)
+                break;
+            case TEMIZLENDI:
+                kare.setFill(Color.web("#ffffff")); // Beyaz
+                break;
+            case TOZ:
+                kare.setFill(Color.web("#b2bec3")); // Gri Toz
+                break;
+            case SIVI:
+                kare.setFill(Color.web("#74b9ff")); // Mavi Sıvı
+                break;
+            case LEKE:
+                kare.setFill(Color.web("#a29bfe")); // Mor Leke
+                break;
+            case ENGEL:
+                kare.setFill(Color.web("#2d3436")); // Koyu Gri Mobilya
+                break;
+            case SARJ_ISTASYONU:
+                kare.setFill(Color.web("#2ecc71")); // Yeşil Şarj İstasyonu (PDF gereksinimi)
+                break;
+        }
+    }
+
+    // Tüm ızgarayı modelin güncel durumuna göre yeniden çizer
+    public void tumTahtayiGuncelle() {
+        for (int satir = 0; satir < oda.getSatirSayisi(); satir++) {
+            for (int sutun = 0; sutun < oda.getSutunSayisi(); sutun++) {
+                hucreYenile(satir, sutun, oda.getHucreTuru(sutun, satir));
+            }
+        }
     }
 
     public void robotuCiz(Robot robot) {
@@ -55,21 +103,58 @@ public class RoomGridView {
         gorselRobot.setStroke(Color.web("#2d3436"));
         gorselRobot.setStrokeWidth(2);
 
+        sonRobotX = robot.getX();
+        sonRobotY = robot.getY();
+
         robotuGuncelle(robot);
         oyunAlani.getChildren().add(gorselRobot);
     }
 
     public void robotuGuncelle(Robot robot) {
-        gorselRobot.setCenterX((robot.getX() * hucreBoyutu) + (hucreBoyutu / 2));
-        gorselRobot.setCenterY((robot.getY() * hucreBoyutu) + (hucreBoyutu / 2));
+        double yeniCenterX = (robot.getX() * hucreBoyutu) + (hucreBoyutu / 2);
+        double yeniCenterY = (robot.getY() * hucreBoyutu) + (hucreBoyutu / 2);
+
+        // Eğer robot hareket ettiyse arkasında mavi kesikli bir iz bırak (PDF gereksinimi)
+        if (sonRobotX != -1 && sonRobotY != -1 && (sonRobotX != robot.getX() || sonRobotY != robot.getY())) {
+            double eskiCenterX = (sonRobotX * hucreBoyutu) + (hucreBoyutu / 2);
+            double eskiCenterY = (sonRobotY * hucreBoyutu) + (hucreBoyutu / 2);
+
+            Line iz = new Line(eskiCenterX, eskiCenterY, yeniCenterX, yeniCenterY);
+            iz.setStroke(Color.web("#0984e3"));
+            iz.setStrokeWidth(2.5);
+            iz.getStrokeDashArray().addAll(6.0, 6.0); // Kesikli çizgi yapıyoruz
+            iz.setOpacity(0.65);
+
+            hareketIzleri.add(iz);
+
+            // İz çizgisini robotun arkasında kalacak şekilde ekliyoruz
+            int robotIndex = oyunAlani.getChildren().indexOf(gorselRobot);
+            if (robotIndex != -1) {
+                oyunAlani.getChildren().add(robotIndex, iz);
+            } else {
+                oyunAlani.getChildren().add(iz);
+            }
+        }
+
+        sonRobotX = robot.getX();
+        sonRobotY = robot.getY();
+
+        gorselRobot.setCenterX(yeniCenterX);
+        gorselRobot.setCenterY(yeniCenterY);
+    }
+
+    public void izleriTemizle() {
+        for (Line iz : hareketIzleri) {
+            oyunAlani.getChildren().remove(iz);
+        }
+        hareketIzleri.clear();
+        sonRobotX = -1;
+        sonRobotY = -1;
     }
 
     public void tahtayiSifirla() {
-        for (int i = 0; i < oda.getSatirSayisi(); i++) {
-            for (int j = 0; j < oda.getSutunSayisi(); j++) {
-                hucreler[i][j].setFill(Color.web("#faebd7"));
-            }
-        }
+        izleriTemizle();
+        tumTahtayiGuncelle();
     }
 
     public Rectangle[][] getHucreler() {

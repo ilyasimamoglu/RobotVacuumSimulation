@@ -8,7 +8,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import vacuumsim.model.Robot;
 import vacuumsim.model.Room;
@@ -28,8 +27,9 @@ import vacuumsim.view.RoomGridView;
 public class SimulationController {
 
     @FXML private ComboBox<String> cmbKirTuru;
-    @FXML private Button btnKirEkle, btnMobilyaEkle, btnBaslat, btnDuraklat, btnSifirla, btnIstasyonaDon;
+    @FXML private Button btnKirEkle, btnMobilyaEkle, btnBaslat, btnDuraklat, btnSifirla, btnKirleriTemizle;
     @FXML private Slider sldHiz;
+    @FXML private Slider sldBatarya;
     @FXML private ToggleGroup algoGroup;
     @FXML private Label lblYon, lblBatarya, lblKonum;
     @FXML private Label lblToplamAlan, lblTemizlenenAlan, lblKalanAlan, lblGecenSure, lblToplananToz;
@@ -57,14 +57,24 @@ public class SimulationController {
             for (int sutun = 0; sutun < oda.getSutunSayisi(); sutun++) {
                 Rectangle kare = gridView.hucreOlustur(satir, sutun);
 
+                final int finalSatir = satir;
+                final int finalSutun = sutun;
                 kare.setOnMouseClicked(event -> {
+                    // Şarj istasyonu konumuna elle engel veya kir eklenmesini engelliyoruz
+                    if (finalSatir == 0 && finalSutun == 0) return;
+
                     if (aktifMod == EditModu.KIR_EKLE) {
                         String secilenKir = cmbKirTuru.getValue();
-                        if (secilenKir.equals("Toz")) kare.setFill(Color.web("#b2bec3"));
-                        else if (secilenKir.equals("Sıvı")) kare.setFill(Color.web("#74b9ff"));
-                        else if (secilenKir.equals("Leke")) kare.setFill(Color.web("#a29bfe"));
+                        Room.HucreTuru tur = Room.HucreTuru.TEMIZ;
+                        if (secilenKir.equals("Toz")) tur = Room.HucreTuru.TOZ;
+                        else if (secilenKir.equals("Sıvı")) tur = Room.HucreTuru.SIVI;
+                        else if (secilenKir.equals("Leke")) tur = Room.HucreTuru.LEKE;
+
+                        oda.setHucreTuru(finalSutun, finalSatir, tur);
+                        gridView.hucreYenile(finalSatir, finalSutun, tur);
                     } else if (aktifMod == EditModu.MOBILYA_EKLE) {
-                        kare.setFill(Color.web("#2d3436"));
+                        oda.setHucreTuru(finalSutun, finalSatir, Room.HucreTuru.ENGEL);
+                        gridView.hucreYenile(finalSatir, finalSutun, Room.HucreTuru.ENGEL);
                     }
                 });
             }
@@ -72,11 +82,11 @@ public class SimulationController {
 
         // 2. Modelleri, Beyni ve Motoru Kur
         robot = new Robot(istasyon.getX(), istasyon.getY());
-        pathfinder = new Pathfinder(robot, gridView.getHucreler(), oda.getSutunSayisi(), oda.getSatirSayisi());
+        pathfinder = new Pathfinder(robot, oda);
         gridView.robotuCiz(robot);
 
         // Motora "Her saniye bu ekraniGuncelle metodunu çalıştır" diyoruz.
-        motor = new SimulationEngine(robot, pathfinder, gridView.getHucreler(), istasyon, this::ekraniGuncelle);
+        motor = new SimulationEngine(robot, pathfinder, oda, istasyon, this::ekraniGuncelle);
 
         // Algoritma seçimini motora bağla
         algoGroup.selectedToggleProperty().addListener((obs, eski, yeni) -> {
@@ -88,12 +98,22 @@ public class SimulationController {
             motor.setHiz(Math.max(yeni.doubleValue() / 10.0, 0.2));
         });
 
+        // Batarya manuel ayar sürgüsü (PDF gereksinimi)
+        sldBatarya.valueProperty().addListener((obs, eski, yeni) -> {
+            int yeniBatarya = yeni.intValue();
+            if (robot.getBatarya() != yeniBatarya) {
+                robot.setBatarya(yeniBatarya);
+                ekraniGuncelle();
+            }
+        });
+
         ekraniGuncelle();
     }
 
     // --- EKRAN GÜNCELLEME (Sıfır Matematik) ---
     private void ekraniGuncelle() {
         lblBatarya.setText("%" + robot.getBatarya());
+        sldBatarya.setValue(robot.getBatarya()); // Sürgüyü de güncelle
         lblKonum.setText("(" + robot.getX() + ", " + robot.getY() + ")");
         lblYon.setText(robot.getYon().toString());
 
@@ -106,6 +126,7 @@ public class SimulationController {
         lblToplananToz.setText("Toplanan Kir: " + motor.getToplananKirSayisi());
 
         gridView.robotuGuncelle(robot);
+        gridView.tumTahtayiGuncelle(); // Arayüz karolarını modelin durumuna göre güncelle (MVC)
     }
 
     // --- BUTON KOMUTLARI ---
@@ -114,15 +135,25 @@ public class SimulationController {
     @FXML public void kirEkleTiklandi() { aktifMod = EditModu.KIR_EKLE; }
     @FXML public void mobilyaEkleTiklandi() { aktifMod = EditModu.MOBILYA_EKLE; }
     @FXML
-    public void istasyonaDonTiklandi() {
-        System.out.println("İstasyona Dön tuşuna basıldı! Rota çiziliyor...");
-        motor.istasyonaDon();
-        motor.baslat(); // EĞER OYUN DURDURULDUYSA VEYA ŞARJ BİTTİYSE MOTORU ZORLA ÇALIŞTIR!
+    public void kirleriTemizleTiklandi() {
+        System.out.println("Sadece kirler temizleniyor...");
+        motor.kirleriTemizle();
+        gridView.tumTahtayiGuncelle();
+        ekraniGuncelle();
     }
 
     @FXML
     public void sifirlaTiklandi() {
         motor.sifirla();
+        gridView.tahtayiSifirla();
+        gridView.robotuGuncelle(robot);
+        sldHiz.setValue(50.0);
+        ekraniGuncelle();
+    }
+
+    @FXML
+    public void rotayiSifirlaTiklandi() {
+        motor.rotayiSifirla();
         gridView.tahtayiSifirla();
         gridView.robotuGuncelle(robot);
         sldHiz.setValue(50.0);

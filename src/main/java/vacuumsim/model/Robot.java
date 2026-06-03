@@ -44,6 +44,17 @@ public class Robot {
         this.yon = yon;
     }
 
+    // Batarya değerini elle değiştirmek için setter
+    public void setBatarya(int batarya) {
+        if (batarya < 0) {
+            this.batarya = 0;
+        } else if (batarya > 100) {
+            this.batarya = 100;
+        } else {
+            this.batarya = batarya;
+        }
+    }
+
     // Batarya düşürme metodu
     public void sarjTuket(int miktar){
         this.batarya-=miktar;

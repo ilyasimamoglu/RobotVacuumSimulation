@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -19,11 +20,13 @@
 <BorderPane prefHeight="720.0" prefWidth="1050.0" style="-fx-background-color: #f1f2f6;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vacuumsim.controller.SimulationController">
 
    <left>
-      <VBox prefWidth="250.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #dcdde1; -fx-border-width: 0 1 0 0;" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         <children>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" prefWidth="255.0" style="-fx-background-color: transparent; -fx-background: white; -fx-border-color: #dcdde1; -fx-border-width: 0 1 0 0; -fx-padding: 0;" BorderPane.alignment="CENTER">
+         <content>
+            <VBox spacing="12.0" style="-fx-background-color: #ffffff;">
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+               <children>
 
             <VBox spacing="8.0">
                <children>
@@ -84,6 +87,10 @@
                            <font><Font name="System Bold" size="12.0" /></font></Label>
                      </children>
                   </GridPane>
+                  <Label text="Manuel Batarya Ayarı:" textFill="#2c3e50">
+                     <font><Font name="System Bold" size="11.0" /></font>
+                  </Label>
+                  <Slider fx:id="sldBatarya" max="100.0" min="0.0" showTickLabels="true" showTickMarks="true" value="100.0" />
                </children>
             </VBox>
 
@@ -94,12 +101,15 @@
                   </Label>
                   <Button fx:id="btnBaslat" mnemonicParsing="false" onAction="#baslatTiklandi" prefWidth="210.0" style="-fx-background-color: #00b894; -fx-text-fill: white; -fx-font-weight: bold;" text="Başlat" />
                   <Button fx:id="btnDuraklat" mnemonicParsing="false" onAction="#duraklatTiklandi" prefWidth="210.0" style="-fx-background-color: #fdcb6e; -fx-text-fill: #2d3436; -fx-font-weight: bold;" text="Duraklat" />
+                  <Button fx:id="btnRotayiSifirla" mnemonicParsing="false" onAction="#rotayiSifirlaTiklandi" prefWidth="210.0" style="-fx-background-color: #e84393; -fx-text-fill: white; -fx-font-weight: bold;" text="Rotayı Sıfırla" />
+                  <Button fx:id="btnKirleriTemizle" mnemonicParsing="false" onAction="#kirleriTemizleTiklandi" prefWidth="210.0" style="-fx-background-color: #e17055; -fx-text-fill: white; -fx-font-weight: bold;" text="Kirleri Temizle" />
                   <Button fx:id="btnSifirla" mnemonicParsing="false" onAction="#sifirlaTiklandi" prefWidth="210.0" style="-fx-background-color: #d63031; -fx-text-fill: white; -fx-font-weight: bold;" text="Sıfırla" />
-                  <Button fx:id="btnIstasyonaDon" mnemonicParsing="false" onAction="#istasyonaDonTiklandi" prefWidth="210.0" style="-fx-background-color: #00cec9; -fx-text-fill: white; -fx-font-weight: bold;" text="İstasyona Dön" />
                </children>
             </VBox>
-         </children>
-      </VBox>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
    </left>
 
    <center>

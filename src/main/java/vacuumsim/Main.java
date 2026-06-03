@@ -14,7 +14,7 @@ public class Main extends Application {
 
      FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/vacuumsim/view/MainView.fxml"));
 
-     Scene scene = new Scene(fxmlLoader.load(),1000,700);
+     Scene scene = new Scene(fxmlLoader.load(), 1050, 780);
 
      stage.setTitle("Robot Vacuum Simulation");
      stage.setScene(scene);
