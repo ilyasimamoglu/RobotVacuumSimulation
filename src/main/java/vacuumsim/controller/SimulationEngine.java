@@ -206,7 +206,6 @@ public class SimulationEngine {
         gecenSaniye = 0; temizlenenKareSayisi = 0; toplananKirSayisi = 0;
         mevcutKir = null; kalanTemizlemeSuresi = 0; istasyonaDonuyor = false; adimSayaci = 0;
         temizligeDonuyor = false; temizligeDonusRotasi = null;
-        setHiz(5.0);
         pathfinder.reset();
         oda.sifirla(); // Modeli de sıfırla
     }
@@ -219,7 +218,6 @@ public class SimulationEngine {
         gecenSaniye = 0; temizlenenKareSayisi = 0; toplananKirSayisi = 0;
         mevcutKir = null; kalanTemizlemeSuresi = 0; istasyonaDonuyor = false; adimSayaci = 0;
         temizligeDonuyor = false; temizligeDonusRotasi = null;
-        setHiz(5.0);
         pathfinder.reset();
         oda.rotayiSifirla(); // Modeli de sadece rotayı sıfırlayarak güncelle
     }

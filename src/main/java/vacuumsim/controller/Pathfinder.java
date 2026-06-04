@@ -322,6 +322,21 @@ public class Pathfinder {
         return oda.getHucreTuru(hX, hY) != Room.HucreTuru.ENGEL;
     }
 
+    public boolean yonGidilebilirVeTemizlenmemisMi(Robot.YON yon) {
+        int hX = robot.getX();
+        int hY = robot.getY();
+        if (yon == Robot.YON.KUZEY) hY--;
+        else if (yon == Robot.YON.GUNEY) hY++;
+        else if (yon == Robot.YON.DOGU) hX++;
+        else if (yon == Robot.YON.BATI) hX--;
+
+        if (hX < 0 || hX >= oda.getSutunSayisi() || hY < 0 || hY >= oda.getSatirSayisi()) return false;
+        Room.HucreTuru tur = oda.getHucreTuru(hX, hY);
+        // Sadece temizlenmemiş zeminler ve kirli hücreler gidilebilir olarak kabul edilir
+        return tur == Room.HucreTuru.TEMIZ || tur == Room.HucreTuru.TOZ || 
+               tur == Room.HucreTuru.SIVI || tur == Room.HucreTuru.LEKE;
+    }
+
     /**
      * 4. ZİKZAK NAVİGASYON (Boustrophedon / Zigzag Pattern)
      * Yeni nesil sistematik temizlik yapan süpürgelerin kullandığı tarama mantığıdır.
@@ -341,11 +356,11 @@ public class Pathfinder {
             return;
         }
 
-        if (onumAcikMi()) {
-            ileriGit(); // Hatta önümüz açıksa ilerle
+        if (onumAcikMi() && onumdekiKareZiyaretEdilmediMi()) {
+            ileriGit(); // Hatta önümüz açık ve henüz temizlenmemişse ilerle
         } else {
-            // Önümüz kapandıysa (duvar veya mobilya engeli varsa), sağa (DOĞU) 1 adım kay
-            if (yonAcikMi(Robot.YON.DOGU)) {
+            // Önümüz kapandıysa veya süpürüldüyse, sağa (DOĞU) temizlenmemiş 1 adım kay
+            if (yonGidilebilirVeTemizlenmemisMi(Robot.YON.DOGU)) {
                 robot.setYon(Robot.YON.DOGU);
                 ileriGit();
                 
@@ -357,8 +372,8 @@ public class Pathfinder {
 
     public boolean zigzagSikistiMi() {
         Robot.YON dikeyYon = zigzagYonYukari ? Robot.YON.KUZEY : Robot.YON.GUNEY;
-        boolean dikeyAcik = yonAcikMi(dikeyYon);
-        boolean doguAcik = yonAcikMi(Robot.YON.DOGU);
-        return !dikeyAcik && !doguAcik;
+        boolean dikeyGidilebilir = yonGidilebilirVeTemizlenmemisMi(dikeyYon);
+        boolean doguGidilebilir = yonGidilebilirVeTemizlenmemisMi(Robot.YON.DOGU);
+        return !dikeyGidilebilir && !doguGidilebilir;
     }
 }

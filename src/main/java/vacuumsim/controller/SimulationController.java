@@ -101,6 +101,7 @@ public class SimulationController {
         sldHiz.valueProperty().addListener((obs, eski, yeni) -> {
             motor.setHiz(Math.max(yeni.doubleValue() / 10.0, 0.2));
         });
+        motor.setHiz(Math.max(sldHiz.getValue() / 10.0, 0.2));
 
         // Batarya manuel ayar sürgüsü (PDF gereksinimi)
         sldBatarya.valueProperty().addListener((obs, eski, yeni) -> {
@@ -164,7 +165,6 @@ public class SimulationController {
         motor.sifirla();
         gridView.tahtayiSifirla();
         gridView.robotuGuncelle(robot);
-        sldHiz.setValue(50.0);
         ekraniGuncelle();
     }
 
@@ -173,7 +173,6 @@ public class SimulationController {
         motor.rotayiSifirla();
         gridView.tahtayiSifirla();
         gridView.robotuGuncelle(robot);
-        sldHiz.setValue(50.0);
         ekraniGuncelle();
     }
 }
