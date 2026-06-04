@@ -28,43 +28,75 @@ public class Pathfinder {
     }
 
     // =========================================================================
-    // YAPAY ZEKA ALGORİTMALARI
+    // YAPAY ZEKA TEMİZLİK ALGORİTMALARI
     // =========================================================================
-
+ 
+    /**
+     * 1. RASTGELE NAVİGASYON (Random Walk / Bounce)
+     * Çevresini haritalandıramayan temel nesil robot süpürgelerin kullandığı mantıktır.
+     * Robot düz bir çizgide ilerler; duvara veya mobilyaya çarptığında rastgele yön
+     * (sağa veya sola 90 derece) değiştirerek temizliğe başka bir doğrultuda devam eder.
+     */
     public void hareketRastgele() {
         if (onumAcikMi()) {
-            ileriGit();
+            ileriGit(); // Önü boşsa düz gitmeye devam et
         } else {
-            if (Math.random() > 0.5) sagaDon();
-            else solaDon();
+            // Engele çarptığında sağa veya sola rastgele dönerek sekme hareketi yap
+            if (Math.random() > 0.5) {
+                sagaDon();
+            } else {
+                solaDon();
+            }
         }
     }
-
+ 
+    /**
+     * 2. SARMAL / SPİRAL TEMİZLİK (Spiral / Spot Cleaning)
+     * Özellikle dökülen kirlerin olduğu yoğun bölgeleri dairesel/karesel genişleyerek
+     * temizlemek için kullanılır.
+     * Robot, önündeki kare hem açık hem de henüz "temizlenmemiş/ziyaret edilmemiş" ise
+     * düz gider. Eğer önü kapalıysa veya önündeki kare zaten temizlenmişse sağa döner.
+     * Bu sayede iç içe geçen karesel çizgilerle merkezden dışa doğru bir sarmal çizer.
+     */
     public void hareketSpiral() {
-        // Önümüz açık ve henüz temizlenmemiş/ziyaret edilmemiş bir zeminse ilerle
+        // Önümüz açık VE önümüzdeki hücre henüz süpürülmemiş bir zeminse düz ilerle
         if (onumAcikMi() && onumdekiKareZiyaretEdilmediMi()) {
             ileriGit();
-            donusSayici = 0; // Başarıyla ilerlediğimiz için sayacı sıfırla
+            donusSayici = 0; // İlerleyebildiğimiz için dönüş sayacını sıfırla
         } else {
+            // Önümüz kapalıysa veya önümüzdeki hücreyi zaten temizlediysek sarmalı büyütmek için sağa dön
             sagaDon();
             donusSayici++;
-
-            // Eğer 4 kez üst üste döndüysek, etrafımızdaki tüm yollar ya duvar ya da zaten temizlenmiştir.
-            // Sıkışmayı önlemek için geçici olarak rastgele hareket modunu tetikleyip sarmaldan dışarı çıkıyoruz.
+ 
+            // Eğer robot kendi etrafında 4 defa üst üste dönerse (yani etrafındaki 4 kare de
+            // ya engelle kaplı ya da zaten temizlenmişse) sıkışmayı önlemek için geçici olarak
+            // rastgele hareket modunu tetikler ve sarmal döngüsünden dışarı çıkar.
             if (donusSayici >= 4) {
                 hareketRastgele();
                 donusSayici = 0;
             }
         }
     }
-
+ 
+    /**
+     * 3. KENAR / DUVAR TAKİBİ (Wall Following)
+     * Robotun odanın sınırlarını belirlemek ve mobilya kenarlarındaki tozları
+     * temizlemek için kullandığı algoritmadır. 
+     * Robot sağ tarafındaki sanal sensörle duvarı algılar.
+     * - Sağ tarafı boşaldığında hemen sağa döner (duvarı sağında tutmaya devam etmek için).
+     * - Sağ tarafı kapalıyken önü açıksa düz gider (duvar boyunca ilerler).
+     * - Hem önü hem sağı kapalıysa köşeden kurtulmak için sola döner.
+     */
     public void hareketDuvarTakibi() {
         if (sagimAcikMi()) {
+            // Sağ taraf boşaldıysa duvarı takip etmek için sağa sap ve ilerle
             sagaDon();
             ileriGit();
         } else if (onumAcikMi()) {
+            // Sağımız duvarla/engelle kaplıysa ve önümüz açıksa düz ilerle (duvarı takip et)
             ileriGit();
         } else {
+            // Köşeye geldiysek (sağımız ve önümüz kapalıysa) sola dönerek kurtul
             solaDon();
         }
     }
