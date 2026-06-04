@@ -126,26 +126,30 @@ public class SimulationEngine {
             // Eğer aktif algoritma Spiral ise ve robot şu an temizlenmiş/ziyaret edilmiş bir hücredeyse,
             // spiralin dışına çıkmış veya şarjdan yeni dönmüş demektir.
             // Bu durumda BFS ile en yakın temizlenmemiş hücreye giden rotayı bulup oraya yürütelim.
+            // Eğer aktif algoritma Spiral ise ve robot hareket edemeyecek şekilde sıkışmışsa,
+            // veya etrafındaki tüm alanlar süpürülmüş/engelle kaplıysa, BFS ile en yakın
+            // temizlenmemiş hücreye giden rotayı bulup oraya yürütelim.
             if (aktifAlgoritma.equals("Spiral")) {
-                Room.HucreTuru suAnkiTur = oda.getHucreTuru(robot.getX(), robot.getY());
-                if (suAnkiTur == Room.HucreTuru.TEMIZLENDI || suAnkiTur == Room.HucreTuru.SARJ_ISTASYONU) {
-                    temizligeDonusRotasi = pathfinder.bfsEnYakinTemizlenmemisBul();
-                    if (temizligeDonusRotasi != null && !temizligeDonusRotasi.isEmpty()) {
-                        temizligeDonuyor = true;
-                        int[] adim = temizligeDonusRotasi.remove(0);
-                        robot.setX(adim[0]);
-                        robot.setY(adim[1]);
-                        return;
-                    } else {
-                        // Eğer hiç temizlenmemiş alan kalmadıysa otomatik şarj istasyonuna geri dön
-                        System.out.println("Tüm oda temizlendi! Şarj istasyonuna dönülüyor.");
-                        istasyonaDon();
-                        // Zaten istasyondaysak simülasyonu hemen durdur (Batarya dalgalanmasını ve log tekrarını önler)
-                        if (robot.getX() == istasyon.getX() && robot.getY() == istasyon.getY()) {
-                            oyunDongusu.stop();
-                            System.out.println("Simülasyon Bitti: Robot zaten şarj istasyonunda.");
+                if (mevcutKir == null && kalanTemizlemeSuresi == 0) {
+                    if (pathfinder.etrafKapaliVeyaTemizlenmisMi()) {
+                        temizligeDonusRotasi = pathfinder.bfsEnYakinTemizlenmemisBul();
+                        if (temizligeDonusRotasi != null && !temizligeDonusRotasi.isEmpty()) {
+                            temizligeDonuyor = true;
+                            int[] adim = temizligeDonusRotasi.remove(0);
+                            robot.setX(adim[0]);
+                            robot.setY(adim[1]);
+                            return;
+                        } else {
+                            // Eğer hiç temizlenmemiş alan kalmadıysa otomatik şarj istasyonuna geri dön
+                            System.out.println("Tüm oda temizlendi! Şarj istasyonuna dönülüyor.");
+                            istasyonaDon();
+                            // Zaten istasyondaysak simülasyonu hemen durdur (Batarya dalgalanmasını ve log tekrarını önler)
+                            if (robot.getX() == istasyon.getX() && robot.getY() == istasyon.getY()) {
+                                oyunDongusu.stop();
+                                System.out.println("Simülasyon Bitti: Robot zaten şarj istasyonunda.");
+                            }
+                            return;
                         }
-                        return;
                     }
                 }
             }

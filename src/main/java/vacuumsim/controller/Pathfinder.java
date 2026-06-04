@@ -279,4 +279,28 @@ public class Pathfinder {
         else if (robot.getYon() == Robot.YON.GUNEY) robot.setYon(Robot.YON.DOGU);
         else if (robot.getYon() == Robot.YON.DOGU) robot.setYon(Robot.YON.KUZEY);
     }
+
+    /**
+     * Robotun etrafındaki 4 bitişik hücrenin de ya engel (mobilya) ya da zaten temizlenmiş
+     * (ziyaret edilmiş) olup olmadığını kontrol eder.
+     * Eğer her taraf kapalıysa true döner, böylece robot başka bir temizlenmemiş alana sıçrayabilir.
+     */
+    public boolean etrafKapaliVeyaTemizlenmisMi() {
+        int x = robot.getX();
+        int y = robot.getY();
+        int[][] yonler = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+        for (int[] yon : yonler) {
+            int komsuX = x + yon[1];
+            int komsuY = y + yon[0];
+            if (komsuX >= 0 && komsuX < oda.getSutunSayisi() && komsuY >= 0 && komsuY < oda.getSatirSayisi()) {
+                Room.HucreTuru tur = oda.getHucreTuru(komsuX, komsuY);
+                // Eğer komşu hücre henüz temizlenmemişse (TEMIZ, TOZ, SIVI veya LEKE ise) etraf kapalı değildir.
+                if (tur == Room.HucreTuru.TEMIZ || tur == Room.HucreTuru.TOZ || 
+                    tur == Room.HucreTuru.SIVI || tur == Room.HucreTuru.LEKE) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
