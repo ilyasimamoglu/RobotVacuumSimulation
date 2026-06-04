@@ -41,6 +41,15 @@
 
             <VBox spacing="8.0">
                <children>
+                  <Label text="ODA DÜZENİ / SENARYOLAR" textFill="#2c3e50">
+                     <font><Font name="System Bold" size="14.0" /></font>
+                  </Label>
+                  <ComboBox fx:id="cmbOdaDuzeni" onAction="#odaDuzeniDegisti" prefWidth="210.0" promptText="Oda Düzeni Seçin" style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" />
+               </children>
+            </VBox>
+
+            <VBox spacing="8.0">
+               <children>
                   <Label text="ROBOT HIZI" textFill="#2c3e50">
                      <font><Font name="System Bold" size="14.0" /></font>
                   </Label>

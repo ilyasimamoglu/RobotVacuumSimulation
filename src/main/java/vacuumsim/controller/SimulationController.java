@@ -27,6 +27,7 @@ import vacuumsim.view.RoomGridView;
 public class SimulationController {
 
     @FXML private ComboBox<String> cmbKirTuru;
+    @FXML private ComboBox<String> cmbOdaDuzeni;
     @FXML private Button btnKirEkle, btnMobilyaEkle, btnBaslat, btnDuraklat, btnSifirla, btnKirleriTemizle;
     @FXML private Slider sldHiz;
     @FXML private Slider sldBatarya;
@@ -50,6 +51,9 @@ public class SimulationController {
     public void initialize() {
         cmbKirTuru.getItems().addAll("Toz", "Sıvı", "Leke");
         cmbKirTuru.getSelectionModel().selectFirst();
+ 
+        cmbOdaDuzeni.getItems().addAll("Boş Oda", "Oturma Odası", "Çok Odalı Daire", "Labirent");
+        cmbOdaDuzeni.getSelectionModel().selectFirst();
 
         // 1. Ressamı (View) Kur ve Haritayı Çizdir
         gridView = new RoomGridView(ortaOyunAlani, oda, 35.0);
@@ -129,6 +133,19 @@ public class SimulationController {
         gridView.tumTahtayiGuncelle(); // Arayüz karolarını modelin durumuna göre güncelle (MVC)
     }
 
+    @FXML
+    public void odaDuzeniDegisti() {
+        String secilenDuzen = cmbOdaDuzeni.getValue();
+        System.out.println("Oda düzeni değişti: " + secilenDuzen);
+        
+        motor.sifirla(); // Simülasyonu durdur ve sıfırla
+        oda.odaDuzeniniYukle(secilenDuzen); // Modeli yeni düzenle yükle
+        
+        gridView.tahtayiSifirla(); // Arayüz izlerini ve hücreleri temizle/güncelle
+        gridView.robotuGuncelle(robot); // Robotu (0,0) konumuna çek
+        ekraniGuncelle();
+    }
+ 
     // --- BUTON KOMUTLARI ---
     @FXML public void baslatTiklandi() { motor.baslat(); }
     @FXML public void duraklatTiklandi() { motor.duraklat(); }

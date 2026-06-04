@@ -103,4 +103,130 @@ public class Room {
             }
         }
     }
+
+    /**
+     * Önceden tanımlanmış hazır oda düzenlerini (Layouts) haritaya yükler.
+     */
+    public void odaDuzeniniYukle(String duzenIsmi) {
+        sifirla(); // Önce haritayı tamamen boşaltıp temiz hale getiriyoruz
+        
+        if (duzenIsmi.equals("Oturma Odası")) {
+            // TV Ünitesi (Üst tarafta)
+            for (int x = 6; x <= 14; x++) {
+                setHucreTuru(x, 1, HucreTuru.ENGEL);
+            }
+            // Yemek Masası ve Sandalyeler (Sol tarafta)
+            for (int x = 2; x <= 4; x++) {
+                for (int y = 3; y <= 5; y++) {
+                    setHucreTuru(x, y, HucreTuru.ENGEL);
+                }
+            }
+            // L Şeklinde Büyük Koltuk
+            for (int x = 9; x <= 15; x++) {
+                setHucreTuru(x, 10, HucreTuru.ENGEL);
+            }
+            for (int y = 11; y <= 14; y++) {
+                setHucreTuru(15, y, HucreTuru.ENGEL);
+            }
+            // Orta Sehpa
+            setHucreTuru(12, 12, HucreTuru.ENGEL);
+            setHucreTuru(12, 13, HucreTuru.ENGEL);
+
+            // Bölgesel Kirlerin Dağıtılması
+            // Orta sehpa ve koltuk çevresi tozlar
+            setHucreTuru(11, 12, HucreTuru.TOZ);
+            setHucreTuru(11, 13, HucreTuru.TOZ);
+            setHucreTuru(13, 12, HucreTuru.TOZ);
+            setHucreTuru(13, 13, HucreTuru.TOZ);
+            // Yemek masası altındaki yemek lekeleri ve sıvı döküntüleri
+            setHucreTuru(2, 2, HucreTuru.LEKE);
+            setHucreTuru(3, 2, HucreTuru.SIVI);
+            setHucreTuru(4, 2, HucreTuru.LEKE);
+            setHucreTuru(5, 3, HucreTuru.TOZ);
+            setHucreTuru(5, 4, HucreTuru.TOZ);
+            // Odanın kuytu köşelerindeki toz birikintileri
+            setHucreTuru(20, 1, HucreTuru.TOZ);
+            setHucreTuru(20, 2, HucreTuru.TOZ);
+            setHucreTuru(20, 16, HucreTuru.TOZ);
+            setHucreTuru(19, 16, HucreTuru.TOZ);
+            setHucreTuru(1, 16, HucreTuru.TOZ);
+            
+        } else if (duzenIsmi.equals("Çok Odalı Daire")) {
+            // Bölme Duvarlar (Odayı 3 bağımsız odaya ve koridorlara böler)
+            // Dikey Duvar 1 (Sol Oda Bölmesi) - y=5'te kapı boşluğu var
+            for (int y = 0; y <= 12; y++) {
+                if (y != 5) {
+                    setHucreTuru(7, y, HucreTuru.ENGEL);
+                }
+            }
+            // Dikey Duvar 2 (Sağ Oda Bölmesi) - y=10'da kapı boşluğu var
+            for (int y = 5; y <= 17; y++) {
+                if (y != 10) {
+                    setHucreTuru(14, y, HucreTuru.ENGEL);
+                }
+            }
+            // Yatay Duvar (Sol Alt Oda Bölmesi) - x=3'te kapı boşluğu var
+            for (int x = 0; x <= 7; x++) {
+                if (x != 3) {
+                    setHucreTuru(x, 12, HucreTuru.ENGEL);
+                }
+            }
+
+            // Odaların İçindeki Mobilyalar
+            // Oda 1 (Sol Üst - Yatak Odası dolap ve yatak)
+            setHucreTuru(1, 2, HucreTuru.ENGEL);
+            setHucreTuru(2, 2, HucreTuru.ENGEL);
+            setHucreTuru(1, 3, HucreTuru.ENGEL);
+            setHucreTuru(2, 3, HucreTuru.ENGEL);
+            
+            // Oda 2 (Sol Alt - Mutfak tezgahı)
+            setHucreTuru(1, 15, HucreTuru.ENGEL);
+            setHucreTuru(2, 15, HucreTuru.ENGEL);
+            
+            // Oda 3 (Sağ - Oturma Odası kanepesi)
+            setHucreTuru(18, 5, HucreTuru.ENGEL);
+            setHucreTuru(18, 6, HucreTuru.ENGEL);
+            setHucreTuru(18, 7, HucreTuru.ENGEL);
+
+            // Odalardaki Kirlerin Dağılımı
+            setHucreTuru(3, 4, HucreTuru.TOZ);
+            setHucreTuru(4, 5, HucreTuru.TOZ);
+            setHucreTuru(2, 14, HucreTuru.SIVI); // Banyoda/mutfakta sıvı döküntüsü
+            setHucreTuru(3, 15, HucreTuru.LEKE);
+            setHucreTuru(10, 2, HucreTuru.TOZ);
+            setHucreTuru(11, 3, HucreTuru.TOZ);
+            setHucreTuru(17, 6, HucreTuru.TOZ);
+            setHucreTuru(16, 7, HucreTuru.LEKE);
+            
+        } else if (duzenIsmi.equals("Labirent")) {
+            // Kıvrımlı labirent duvarları (Robotun yılan gibi kıvrılmasını test etmek için)
+            // Engel Sütunu 1 (Üstten sarkan)
+            for (int y = 0; y <= 13; y++) {
+                setHucreTuru(4, y, HucreTuru.ENGEL);
+            }
+            // Engel Sütunu 2 (Alttan yükselen)
+            for (int y = 4; y <= 17; y++) {
+                setHucreTuru(8, y, HucreTuru.ENGEL);
+            }
+            // Engel Sütunu 3 (Üstten sarkan)
+            for (int y = 0; y <= 13; y++) {
+                setHucreTuru(12, y, HucreTuru.ENGEL);
+            }
+            // Engel Sütunu 4 (Alttan yükselen)
+            for (int y = 4; y <= 17; y++) {
+                setHucreTuru(16, y, HucreTuru.ENGEL);
+            }
+
+            // Koridorlar boyunca serpilen kirler
+            for (int y = 1; y <= 16; y += 2) {
+                setHucreTuru(2, y, HucreTuru.TOZ);
+                setHucreTuru(6, y, HucreTuru.TOZ);
+                setHucreTuru(10, y, HucreTuru.TOZ);
+                setHucreTuru(14, y, HucreTuru.TOZ);
+                setHucreTuru(18, y, HucreTuru.TOZ);
+            }
+            setHucreTuru(6, 4, HucreTuru.SIVI);
+            setHucreTuru(10, 13, HucreTuru.LEKE);
+        }
+    }
 }
