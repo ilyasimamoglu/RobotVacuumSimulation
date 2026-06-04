@@ -123,15 +123,19 @@ public class SimulationEngine {
                 temizligeDonusRotasi = null;
             }
         } else {
-            // Eğer aktif algoritma Spiral ise ve robot şu an temizlenmiş/ziyaret edilmiş bir hücredeyse,
-            // spiralin dışına çıkmış veya şarjdan yeni dönmüş demektir.
-            // Bu durumda BFS ile en yakın temizlenmemiş hücreye giden rotayı bulup oraya yürütelim.
-            // Eğer aktif algoritma Spiral ise ve robot hareket edemeyecek şekilde sıkışmışsa,
+            // Eğer aktif algoritma Spiral veya Zikzak ise ve robot hareket edemeyecek şekilde sıkışmışsa,
             // veya etrafındaki tüm alanlar süpürülmüş/engelle kaplıysa, BFS ile en yakın
             // temizlenmemiş hücreye giden rotayı bulup oraya yürütelim.
-            if (aktifAlgoritma.equals("Spiral")) {
+            if (aktifAlgoritma.equals("Spiral") || aktifAlgoritma.equals("Zikzak")) {
                 if (mevcutKir == null && kalanTemizlemeSuresi == 0) {
-                    if (pathfinder.etrafKapaliVeyaTemizlenmisMi()) {
+                    boolean sikisti = false;
+                    if (aktifAlgoritma.equals("Spiral") && pathfinder.etrafKapaliVeyaTemizlenmisMi()) {
+                        sikisti = true;
+                    } else if (aktifAlgoritma.equals("Zikzak") && pathfinder.zigzagSikistiMi()) {
+                        sikisti = true;
+                    }
+
+                    if (sikisti) {
                         temizligeDonusRotasi = pathfinder.bfsEnYakinTemizlenmemisBul();
                         if (temizligeDonusRotasi != null && !temizligeDonusRotasi.isEmpty()) {
                             temizligeDonuyor = true;
@@ -155,6 +159,7 @@ public class SimulationEngine {
             }
 
             if (aktifAlgoritma.equals("Rastgele")) pathfinder.hareketRastgele();
+            else if (aktifAlgoritma.equals("Zikzak")) pathfinder.hareketZigzag();
             else if (aktifAlgoritma.equals("Spiral")) pathfinder.hareketSpiral();
             else if (aktifAlgoritma.equals("Duvar Takibi")) pathfinder.hareketDuvarTakibi();
         }
@@ -202,9 +207,10 @@ public class SimulationEngine {
         mevcutKir = null; kalanTemizlemeSuresi = 0; istasyonaDonuyor = false; adimSayaci = 0;
         temizligeDonuyor = false; temizligeDonusRotasi = null;
         setHiz(5.0);
+        pathfinder.reset();
         oda.sifirla(); // Modeli de sıfırla
     }
-
+ 
     public void rotayiSifirla() {
         oyunDongusu.stop();
         robot.fullSajYap();
@@ -214,6 +220,7 @@ public class SimulationEngine {
         mevcutKir = null; kalanTemizlemeSuresi = 0; istasyonaDonuyor = false; adimSayaci = 0;
         temizligeDonuyor = false; temizligeDonusRotasi = null;
         setHiz(5.0);
+        pathfinder.reset();
         oda.rotayiSifirla(); // Modeli de sadece rotayı sıfırlayarak güncelle
     }
 

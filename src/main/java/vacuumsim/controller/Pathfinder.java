@@ -21,6 +21,7 @@ public class Pathfinder {
     private Robot robot;
     private Room oda;
     private int donusSayici = 0; // Spiral sıkışmasını önlemek için dönüş sayacı
+    private boolean zigzagYonYukari = false; // false: aşağı gidiyor (GÜNEY), true: yukarı gidiyor (KUZEY)
 
     public Pathfinder(Robot robot, Room oda) {
         this.robot = robot;
@@ -302,5 +303,62 @@ public class Pathfinder {
             }
         }
         return true;
+    }
+
+    public void reset() {
+        donusSayici = 0;
+        zigzagYonYukari = false;
+    }
+
+    public boolean yonAcikMi(Robot.YON yon) {
+        int hX = robot.getX();
+        int hY = robot.getY();
+        if (yon == Robot.YON.KUZEY) hY--;
+        else if (yon == Robot.YON.GUNEY) hY++;
+        else if (yon == Robot.YON.DOGU) hX++;
+        else if (yon == Robot.YON.BATI) hX--;
+
+        if (hX < 0 || hX >= oda.getSutunSayisi() || hY < 0 || hY >= oda.getSatirSayisi()) return false;
+        return oda.getHucreTuru(hX, hY) != Room.HucreTuru.ENGEL;
+    }
+
+    /**
+     * 4. ZİKZAK NAVİGASYON (Boustrophedon / Zigzag Pattern)
+     * Yeni nesil sistematik temizlik yapan süpürgelerin kullandığı tarama mantığıdır.
+     * Robot odayı dikey kolonlar halinde (yukarı-aşağı) tarar.
+     * Bir uca ulaştığında (örneğin kuzey veya güney duvarı), sağa (Doğuya) 1 adım kayar ve 
+     * bu kez ters yönde taramaya başlar.
+     * Eğer dikey yönde veya sağa kayarken engele (mobilyaya) çarparsa ve sıkışırsa,
+     * BFS ile en yakın süpürülmemiş alana akıllıca rota çizer ve oradan zikzak yapmaya devam eder.
+     */
+    public void hareketZigzag() {
+        Robot.YON dikeyYon = zigzagYonYukari ? Robot.YON.KUZEY : Robot.YON.GUNEY;
+        
+        // Eğer robot dikey doğrultuda değilse (örneğin ilk başta veya sağa kaydıktan sonra),
+        // robotu tarayacağı dikey yöne döndür.
+        if (robot.getYon() != Robot.YON.KUZEY && robot.getYon() != Robot.YON.GUNEY) {
+            robot.setYon(dikeyYon);
+            return;
+        }
+
+        if (onumAcikMi()) {
+            ileriGit(); // Hatta önümüz açıksa ilerle
+        } else {
+            // Önümüz kapandıysa (duvar veya mobilya engeli varsa), sağa (DOĞU) 1 adım kay
+            if (yonAcikMi(Robot.YON.DOGU)) {
+                robot.setYon(Robot.YON.DOGU);
+                ileriGit();
+                
+                // Sağa kaydıktan sonra dikey tarama yönünü tersine çevir
+                zigzagYonYukari = !zigzagYonYukari;
+            }
+        }
+    }
+
+    public boolean zigzagSikistiMi() {
+        Robot.YON dikeyYon = zigzagYonYukari ? Robot.YON.KUZEY : Robot.YON.GUNEY;
+        boolean dikeyAcik = yonAcikMi(dikeyYon);
+        boolean doguAcik = yonAcikMi(Robot.YON.DOGU);
+        return !dikeyAcik && !doguAcik;
     }
 }

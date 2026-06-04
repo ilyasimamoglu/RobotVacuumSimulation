@@ -67,6 +67,7 @@
                         <RadioButton mnemonicParsing="false" selected="true" text="Rastgele">
                            <toggleGroup><ToggleGroup fx:id="algoGroup" /></toggleGroup>
                         </RadioButton>
+                        <RadioButton mnemonicParsing="false" text="Zikzak" toggleGroup="$algoGroup" />
                         <RadioButton mnemonicParsing="false" text="Spiral" toggleGroup="$algoGroup" />
                         <RadioButton mnemonicParsing="false" text="Duvar Takibi" toggleGroup="$algoGroup" />
                      </children>
