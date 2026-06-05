@@ -18,12 +18,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="720.0" prefWidth="1050.0" style="-fx-background-color: #f1f2f6;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vacuumsim.controller.SimulationController">
+<BorderPane prefHeight="720.0" prefWidth="1050.0" style="-fx-background-color: #0f141c;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vacuumsim.controller.SimulationController">
 
    <left>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" prefWidth="255.0" style="-fx-background-color: transparent; -fx-background: white; -fx-border-color: #dcdde1; -fx-border-width: 0 1 0 0; -fx-padding: 0;" BorderPane.alignment="CENTER">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" prefWidth="255.0" style="-fx-background-color: transparent; -fx-background: #171d24; -fx-border-color: #232d37; -fx-border-width: 0 1 0 0; -fx-padding: 0;" BorderPane.alignment="CENTER">
          <content>
-            <VBox spacing="8.0" style="-fx-background-color: #ffffff;">
+            <VBox spacing="8.0" style="-fx-background-color: #171d24;">
                <padding>
                   <Insets bottom="8.0" left="12.0" right="12.0" top="8.0" />
                </padding>
@@ -31,10 +31,10 @@
 
              <VBox spacing="4.0">
                 <children>
-                   <Label text="ARAÇLAR" textFill="#2c3e50">
+                   <Label text="ARAÇLAR" textFill="#00cec9">
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
-                   <ComboBox fx:id="cmbKirTuru" prefWidth="230.0" promptText="Kir Türü Seçin" style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" />
+                   <ComboBox fx:id="cmbKirTuru" prefWidth="230.0" promptText="Kir Türü Seçin" style="-fx-background-color: #232d37; -fx-border-color: #2d3748; -fx-text-fill: white; -fx-border-radius: 4; -fx-prompt-text-fill: #bdc3c7;" />
                    <HBox spacing="6.0">
                       <children>
                          <Button fx:id="btnKirEkle" mnemonicParsing="false" onAction="#kirEkleTiklandi" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-font-size: 11px;" text="Kir Ekle" />
@@ -46,20 +46,20 @@
 
              <VBox spacing="4.0">
                 <children>
-                   <Label text="ODA DÜZENİ / SENARYOLAR" textFill="#2c3e50">
+                   <Label text="ODA DÜZENİ / SENARYOLAR" textFill="#00cec9">
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
-                   <ComboBox fx:id="cmbOdaDuzeni" onAction="#odaDuzeniDegisti" prefWidth="230.0" promptText="Oda Düzeni Seçin" style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" />
+                   <ComboBox fx:id="cmbOdaDuzeni" onAction="#odaDuzeniDegisti" prefWidth="230.0" promptText="Oda Düzeni Seçin" style="-fx-background-color: #232d37; -fx-border-color: #2d3748; -fx-text-fill: white; -fx-border-radius: 4; -fx-prompt-text-fill: #bdc3c7;" />
                 </children>
              </VBox>
 
              <VBox spacing="4.0">
                 <children>
-                   <Label text="ROBOT HIZI" textFill="#2c3e50">
+                   <Label text="ROBOT HIZI" textFill="#00cec9">
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
                    <Slider fx:id="sldHiz" showTickLabels="true" value="50.0" />
-                   <CheckBox fx:id="chkSes" mnemonicParsing="false" selected="true" text="Ses Efektleri" textFill="#2c3e50">
+                   <CheckBox fx:id="chkSes" mnemonicParsing="false" selected="true" text="Ses Efektleri" textFill="WHITE">
                       <font><Font name="System Bold" size="11.0" /></font>
                       <padding><Insets top="2.0" /></padding>
                    </CheckBox>
@@ -68,17 +68,17 @@
 
              <VBox spacing="4.0">
                 <children>
-                   <Label text="TEMİZLİK ALGORİTMASI" textFill="#2c3e50">
+                   <Label text="TEMİZLİK ALGORİTMASI" textFill="#00cec9">
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
-                   <VBox spacing="4.0" style="-fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-background-color: #f7f8f9; -fx-padding: 6 10 6 10;">
+                   <VBox spacing="4.0" style="-fx-border-color: #2d3748; -fx-border-radius: 4; -fx-background-color: #1e2530; -fx-padding: 6 10 6 10;">
                       <children>
-                         <RadioButton mnemonicParsing="false" selected="true" text="Rastgele">
+                         <RadioButton mnemonicParsing="false" selected="true" text="Rastgele" textFill="WHITE">
                             <toggleGroup><ToggleGroup fx:id="algoGroup" /></toggleGroup>
                          </RadioButton>
-                         <RadioButton mnemonicParsing="false" text="Zikzak" toggleGroup="$algoGroup" />
-                         <RadioButton mnemonicParsing="false" text="Spiral" toggleGroup="$algoGroup" />
-                         <RadioButton mnemonicParsing="false" text="Duvar Takibi" toggleGroup="$algoGroup" />
+                         <RadioButton mnemonicParsing="false" text="Zikzak" toggleGroup="$algoGroup" textFill="WHITE" />
+                         <RadioButton mnemonicParsing="false" text="Spiral" toggleGroup="$algoGroup" textFill="WHITE" />
+                         <RadioButton mnemonicParsing="false" text="Duvar Takibi" toggleGroup="$algoGroup" textFill="WHITE" />
                       </children>
                    </VBox>
                 </children>
@@ -86,27 +86,27 @@
 
              <VBox spacing="4.0">
                 <children>
-                   <Label text="ROBOT DURUMU" textFill="#2c3e50">
+                   <Label text="ROBOT DURUMU" textFill="#00cec9">
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
-                   <GridPane hgap="8.0" style="-fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-background-color: #f7f8f9; -fx-padding: 6 10 6 10;" vgap="4.0">
+                   <GridPane hgap="8.0" style="-fx-border-color: #2d3748; -fx-border-radius: 4; -fx-background-color: #1e2530; -fx-padding: 6 10 6 10;" vgap="4.0">
                       <columnConstraints>
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" />
                          <ColumnConstraints hgrow="ALWAYS" minWidth="80.0" />
                       </columnConstraints>
                       <children>
-                         <Label text="Yön:" />
+                         <Label text="Yön:" textFill="#bdc3c7" />
                          <Label fx:id="lblYon" text="DOGU" textFill="#e17055" GridPane.columnIndex="1">
                             <font><Font name="System Bold" size="12.0" /></font></Label>
-                         <Label text="Batarya:" GridPane.rowIndex="1" />
+                         <Label text="Batarya:" textFill="#bdc3c7" GridPane.rowIndex="1" />
                          <Label fx:id="lblBatarya" text="100%" textFill="#00b894" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <font><Font name="System Bold" size="12.0" /></font></Label>
-                         <Label text="Konum:" GridPane.rowIndex="2" />
+                         <Label text="Konum:" textFill="#bdc3c7" GridPane.rowIndex="2" />
                          <Label fx:id="lblKonum" text="(0, 0)" textFill="#0984e3" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <font><Font name="System Bold" size="12.0" /></font></Label>
                       </children>
                    </GridPane>
-                   <Label text="Manuel Batarya Ayarı:" textFill="#2c3e50">
+                   <Label text="Manuel Batarya Ayarı:" textFill="#bdc3c7">
                       <font><Font name="System Bold" size="11.0" /></font>
                    </Label>
                    <Slider fx:id="sldBatarya" max="100.0" min="0.0" showTickLabels="true" showTickMarks="true" value="100.0" />
@@ -115,7 +115,7 @@
 
              <VBox spacing="6.0" VBox.vgrow="ALWAYS">
                 <children>
-                   <Label text="KONTROLLER" textFill="#2c3e50">
+                   <Label text="KONTROLLER" textFill="#00cec9">
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
                    <HBox spacing="6.0">
@@ -147,30 +147,30 @@
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <StackPane style="-fx-background-color: #dfe6e9;" VBox.vgrow="ALWAYS">
+            <StackPane style="-fx-background-color: #0f141c;" VBox.vgrow="ALWAYS">
                <children>
-                  <Pane fx:id="ortaOyunAlani" style="-fx-background-color: #ffffff; -fx-border-color: #b2bec3; -fx-border-width: 3; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 5);" />
+                  <Pane fx:id="ortaOyunAlani" style="-fx-background-color: #1a202c; -fx-border-color: #2d3748; -fx-border-width: 3; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 10, 0, 0, 5);" />
                </children>
             </StackPane>
 
-            <HBox alignment="CENTER" minHeight="50.0" prefHeight="50.0" spacing="35.0" style="-fx-background-color: #2d3436; -fx-border-color: #222f3e; -fx-border-width: 2 0 0 0;">
+            <HBox alignment="CENTER" minHeight="50.0" prefHeight="50.0" spacing="35.0" style="-fx-background-color: #171d24; -fx-border-color: #232d37; -fx-border-width: 2 0 0 0;">
                <children>
                   <Label fx:id="lblToplamAlan" text="Toplam Alan: 0 m²" textFill="WHITE">
-                     <font><Font name="System Bold" size="13.0" /></font></Label>
+                      <font><Font name="System Bold" size="13.0" /></font></Label>
                   <Label fx:id="lblTemizlenenAlan" text="Temizlenen: 0 m²" textFill="WHITE">
-                     <font><Font name="System Bold" size="13.0" /></font></Label>
+                      <font><Font name="System Bold" size="13.0" /></font></Label>
                   <Label fx:id="lblKalanAlan" text="Kalan: 0 m²" textFill="WHITE">
-                     <font><Font name="System Bold" size="13.0" /></font></Label>
+                      <font><Font name="System Bold" size="13.0" /></font></Label>
                   <Label fx:id="lblGecenSure" text="Geçen Süre: 00:00" textFill="#fdcb6e">
-                     <font><Font name="System Bold" size="13.0" /></font></Label>
+                      <font><Font name="System Bold" size="13.0" /></font></Label>
                   <Label fx:id="lblToplananToz" text="Toz: 0" textFill="WHITE">
-                     <font><Font name="System Bold" size="13.0" /></font></Label>
+                      <font><Font name="System Bold" size="13.0" /></font></Label>
                </children>
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>
             </HBox>
-         </children>
+          </children>
       </VBox>
    </center>
 
