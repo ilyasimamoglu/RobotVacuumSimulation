@@ -47,7 +47,7 @@ public class RoomGridView {
 
     public Rectangle hucreOlustur(int satir, int sutun) {
         Rectangle kare = new Rectangle(hucreBoyutu, hucreBoyutu);
-        kare.setStroke(Color.web("#1a202c")); // Koyu sınır çizgileri
+        kare.setStroke(Color.LIGHTGRAY);
         kare.setX(sutun * hucreBoyutu);
         kare.setY(satir * hucreBoyutu);
 
@@ -65,25 +65,25 @@ public class RoomGridView {
         Rectangle kare = hucreler[satir][sutun];
         switch (tur) {
             case TEMIZ:
-                kare.setFill(Color.web("#1e2530")); // Koyu lacivert/siyah (Süpürülmemiş)
+                kare.setFill(Color.web("#faebd7")); // Antik Beyaz (Başlangıç)
                 break;
             case TEMIZLENDI:
-                kare.setFill(Color.web("#2d3748")); // Slate Gri/Mavi (Süpürülmüş)
+                kare.setFill(Color.web("#ffffff")); // Beyaz
                 break;
             case TOZ:
-                kare.setFill(Color.web("#57606f")); // Koyu Toz Rengi
+                kare.setFill(Color.web("#b2bec3")); // Gri Toz
                 break;
             case SIVI:
-                kare.setFill(Color.web("#0984e3")); // Canlı Neon Mavi
+                kare.setFill(Color.web("#74b9ff")); // Mavi Sıvı
                 break;
             case LEKE:
-                kare.setFill(Color.web("#6c5ce7")); // Canlı Mor
+                kare.setFill(Color.web("#a29bfe")); // Mor Leke
                 break;
             case ENGEL:
-                kare.setFill(Color.web("#0c0f14")); // Çok koyu antrasit mobilya
+                kare.setFill(Color.web("#2d3436")); // Koyu Gri Mobilya
                 break;
             case SARJ_ISTASYONU:
-                kare.setFill(Color.web("#00b894")); // Neon Turkuaz Şarj İstasyonu
+                kare.setFill(Color.web("#2ecc71")); // Yeşil Şarj İstasyonu (PDF gereksinimi)
                 break;
         }
     }
@@ -99,8 +99,8 @@ public class RoomGridView {
 
     public void robotuCiz(Robot robot) {
         gorselRobot = new Circle((hucreBoyutu / 2) - 4);
-        gorselRobot.setFill(Color.web("#e17055")); // Turuncu robot gövdesi
-        gorselRobot.setStroke(Color.web("#ffffff")); // Beyaz parlama halkası
+        gorselRobot.setFill(Color.web("#e17055"));
+        gorselRobot.setStroke(Color.web("#2d3436"));
         gorselRobot.setStrokeWidth(2);
 
         sonRobotX = robot.getX();
@@ -114,16 +114,16 @@ public class RoomGridView {
         double yeniCenterX = (robot.getX() * hucreBoyutu) + (hucreBoyutu / 2);
         double yeniCenterY = (robot.getY() * hucreBoyutu) + (hucreBoyutu / 2);
 
-        // Eğer robot hareket ettiyse arkasında camgöbeği lazer bir iz bırak
+        // Eğer robot hareket ettiyse arkasında mavi kesikli bir iz bırak (PDF gereksinimi)
         if (sonRobotX != -1 && sonRobotY != -1 && (sonRobotX != robot.getX() || sonRobotY != robot.getY())) {
             double eskiCenterX = (sonRobotX * hucreBoyutu) + (hucreBoyutu / 2);
             double eskiCenterY = (sonRobotY * hucreBoyutu) + (hucreBoyutu / 2);
 
             Line iz = new Line(eskiCenterX, eskiCenterY, yeniCenterX, yeniCenterY);
-            iz.setStroke(Color.web("#00cec9")); // Neon Camgöbeği lazer izi
+            iz.setStroke(Color.web("#0984e3"));
             iz.setStrokeWidth(2.5);
-            iz.getStrokeDashArray().addAll(6.0, 6.0); // Kesikli çizgi
-            iz.setOpacity(0.8); // Parlama hissi için opaklık artırıldı
+            iz.getStrokeDashArray().addAll(6.0, 6.0); // Kesikli çizgi yapıyoruz
+            iz.setOpacity(0.65);
 
             hareketIzleri.add(iz);
 

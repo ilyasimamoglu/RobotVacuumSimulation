@@ -52,6 +52,11 @@ public class SimulationEngine {
     }
 
     private void motorTiki() {
+        // Eğer ses çalınıyorsa (GLaDOS konuşuyorsa), robot beklesin, hareket etmesin
+        if (SesYonetici.isSesCaliniyor()) {
+            return;
+        }
+
         if (robot.getBatarya() > 0) {
 
             // Eğer batarya %20 veya altına düştüyse acil dönüşü başlat
@@ -180,6 +185,7 @@ public class SimulationEngine {
         if (tur == Room.HucreTuru.TEMIZ) {
             oda.setHucreTuru(x, y, Room.HucreTuru.TEMIZLENDI);
             temizlenenKareSayisi++;
+            SesYonetici.oynatKirVakumlandi(); // Normal temiz zemin süpürüldüğünde de vakum sesi çal
         } 
         // Eğer hücre kirli ise türüne göre kir nesnesini oluştur ve süreyi başlat
         else if (tur == Room.HucreTuru.TOZ || tur == Room.HucreTuru.SIVI || tur == Room.HucreTuru.LEKE) {

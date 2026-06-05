@@ -21,6 +21,7 @@ import java.io.File;
 public class SesYonetici {
 
     private static boolean sesAcik = true;
+    private static boolean sesCaliniyor = false;
     private static final String SES_PAKETI_YOLU = "GLaDOS_Voice_Pack/default-v1/";
 
     public static void setSesAcik(boolean acik) {
@@ -29,6 +30,10 @@ public class SesYonetici {
 
     public static boolean isSesAcik() {
         return sesAcik;
+    }
+
+    public static boolean isSesCaliniyor() {
+        return sesCaliniyor && sesAcik; // Ses kapalıysa kilit aktif olmasın
     }
 
     /**
@@ -44,23 +49,26 @@ public class SesYonetici {
             return false;
         }
 
+        sesCaliniyor = true; // Konuşma başladı, hareketi kilitle
         new Thread(() -> {
             try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(sesDosyasi)) {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioStream);
                 clip.start();
                 
-                // Klip çalmayı bitirene kadar iş parçacığını canlı tut (en fazla 10 saniye)
+                // Klip çalmaya başlayana ve bitene kadar iş parçacığını canlı tut
+                Thread.sleep(100);
                 int sayac = 0;
                 while (clip.isRunning() && sayac < 100) {
                     Thread.sleep(100);
                     sayac++;
                 }
-                // Kısa bir beklemeden sonra klibi kapatıp kaynakları serbest bırakıyoruz
                 Thread.sleep(100);
                 clip.close();
             } catch (Exception e) {
                 System.err.println("Ses dosyası çalınırken hata oluştu: " + e.getMessage());
+            } finally {
+                sesCaliniyor = false; // Konuşma bitti, kilidi kaldır
             }
         }).start();
 
