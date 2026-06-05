@@ -57,6 +57,7 @@ public class SimulationEngine {
             // Eğer batarya %20 veya altına düştüyse acil dönüşü başlat
             if (robot.getBatarya() <= 20 && !istasyonaDonuyor) {
                 System.out.println("UYARI: Batarya Kritik Seviyede! Otomatik istasyona dönülüyor.");
+                SesYonetici.oynatDusukBatarya();
                 istasyonaDon();
             }
 
@@ -78,6 +79,7 @@ public class SimulationEngine {
                     temizlenenKareSayisi++;
                     toplananKirSayisi++;
                     mevcutKir = null;
+                    SesYonetici.oynatKirVakumlandi(); // Kir temizlendiğinde vakum sesi çal
                 }
             }
             else {
@@ -111,6 +113,9 @@ public class SimulationEngine {
                 if (kalanTemizlenmemis == null || kalanTemizlenmemis.isEmpty()) {
                     oyunDongusu.stop();
                     System.out.println("Simülasyon Bitti: Tüm oda temizlendi ve robot şarj istasyonuna döndü.");
+                    SesYonetici.oynatTemizlikBitti();
+                } else {
+                    SesYonetici.oynatSarjOluyor();
                 }
             }
         } else if (temizligeDonuyor) {
@@ -147,6 +152,7 @@ public class SimulationEngine {
                             // Eğer hiç temizlenmemiş alan kalmadıysa otomatik şarj istasyonuna geri dön
                             System.out.println("Tüm oda temizlendi! Şarj istasyonuna dönülüyor.");
                             istasyonaDon();
+                            SesYonetici.oynatSarjaDonuyor();
                             // Zaten istasyondaysak simülasyonu hemen durdur (Batarya dalgalanmasını ve log tekrarını önler)
                             if (robot.getX() == istasyon.getX() && robot.getY() == istasyon.getY()) {
                                 oyunDongusu.stop();
@@ -187,8 +193,14 @@ public class SimulationEngine {
         }
     }
 
-    public void baslat() { oyunDongusu.play(); }
-    public void duraklat() { oyunDongusu.pause(); }
+    public void baslat() {
+        oyunDongusu.play();
+        SesYonetici.oynatTemizlikBasladi();
+    }
+    public void duraklat() {
+        oyunDongusu.pause();
+        SesYonetici.oynatTemizlikDurduruldu();
+    }
     public void setHiz(double hizCarpani) { if (oyunDongusu != null) oyunDongusu.setRate(hizCarpani); }
     public void setAktifAlgoritma(String algo) { this.aktifAlgoritma = algo; }
 

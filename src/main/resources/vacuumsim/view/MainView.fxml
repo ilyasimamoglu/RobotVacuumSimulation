@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
@@ -58,6 +59,10 @@
                       <font><Font name="System Bold" size="12.0" /></font>
                    </Label>
                    <Slider fx:id="sldHiz" showTickLabels="true" value="50.0" />
+                   <CheckBox fx:id="chkSes" mnemonicParsing="false" selected="true" text="Ses Efektleri" textFill="#2c3e50">
+                      <font><Font name="System Bold" size="11.0" /></font>
+                      <padding><Insets top="2.0" /></padding>
+                   </CheckBox>
                 </children>
              </VBox>
 
@@ -125,7 +130,12 @@
                          <Button fx:id="btnKirleriTemizle" mnemonicParsing="false" onAction="#kirleriTemizleTiklandi" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #e17055; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-font-size: 10px; -fx-padding: 6 3 6 3;" text="Kirleri Temizle" />
                       </children>
                    </HBox>
-                   <Button fx:id="btnSifirla" mnemonicParsing="false" onAction="#sifirlaTiklandi" maxWidth="Infinity" style="-fx-background-color: #d63031; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-font-size: 11px;" text="Sıfırla" />
+                   <HBox spacing="6.0">
+                      <children>
+                         <Button fx:id="btnSifirla" mnemonicParsing="false" onAction="#sifirlaTiklandi" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #d63031; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-font-size: 11px;" text="Sıfırla" />
+                         <Button fx:id="btnRobotuBul" mnemonicParsing="false" onAction="#robotuBulTiklandi" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-font-size: 11px;" text="Robotu Bul" />
+                      </children>
+                   </HBox>
                 </children>
              </VBox>
                </children>

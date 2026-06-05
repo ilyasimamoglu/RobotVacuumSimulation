@@ -2,6 +2,7 @@ package vacuumsim.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -28,9 +29,10 @@ public class SimulationController {
 
     @FXML private ComboBox<String> cmbKirTuru;
     @FXML private ComboBox<String> cmbOdaDuzeni;
-    @FXML private Button btnKirEkle, btnMobilyaEkle, btnBaslat, btnDuraklat, btnSifirla, btnKirleriTemizle;
+    @FXML private Button btnKirEkle, btnMobilyaEkle, btnBaslat, btnDuraklat, btnSifirla, btnKirleriTemizle, btnRobotuBul;
     @FXML private Slider sldHiz;
     @FXML private Slider sldBatarya;
+    @FXML private CheckBox chkSes;
     @FXML private ToggleGroup algoGroup;
     @FXML private Label lblYon, lblBatarya, lblKonum;
     @FXML private Label lblToplamAlan, lblTemizlenenAlan, lblKalanAlan, lblGecenSure, lblToplananToz;
@@ -112,6 +114,12 @@ public class SimulationController {
             }
         });
 
+        // Ses Efektleri CheckBox dinleyicisi
+        chkSes.selectedProperty().addListener((obs, eski, yeni) -> {
+            SesYonetici.setSesAcik(yeni);
+        });
+        SesYonetici.setSesAcik(chkSes.isSelected());
+
         ekraniGuncelle();
     }
 
@@ -174,5 +182,10 @@ public class SimulationController {
         gridView.tahtayiSifirla();
         gridView.robotuGuncelle(robot);
         ekraniGuncelle();
+    }
+
+    @FXML
+    public void robotuBulTiklandi() {
+        SesYonetici.oynatRobotuBul();
     }
 }
