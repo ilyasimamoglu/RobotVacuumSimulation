@@ -14,6 +14,8 @@ import java.io.File;
  * GLaDOS Ses Paketi yüklüyse (.wav dosyaları) onları çalar,
  * yoksa otomatik olarak Java'nın yerleşik ses sentezleyicisiyle bip melodileri üretir.
  * Tüm çalma işlemleri ana arayüzü dondurmaması için arka planda (Thread) asenkron çalışır.
+ * 
+ * GLaDOS Ses Paketi Kaynağı: https://github.com/arner/roborock-glados.git
  * ============================================================================
  */
 public class SesYonetici {
