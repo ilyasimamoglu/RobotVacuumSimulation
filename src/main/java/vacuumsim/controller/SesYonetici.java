@@ -22,7 +22,7 @@ public class SesYonetici {
 
     private static boolean sesAcik = true;
     private static boolean sesCaliniyor = false;
-    private static final String SES_PAKETI_YOLU = "GLaDOS_Voice_Pack/default-v1/";
+    private static final String SES_PAKETI_YOLU = "GLaDOS_Voice_Pack/";
 
     public static void setSesAcik(boolean acik) {
         sesAcik = acik;
@@ -185,6 +185,17 @@ public class SesYonetici {
             for (int i = 0; i < 3; i++) {
                 bip(1200, 100, 0.6);
                 bekle(120);
+            }
+        }
+    }
+
+    public static void oynatUlasilamazAlanAlgilandi() {
+        boolean basarili = dosyadanOynat("zone_failed.wav");
+        if (!basarili) {
+            // Fallback: Kalın ve uyarıcı üçlü bip sesi
+            for (int i = 0; i < 3; i++) {
+                bip(330, 250, 0.6);
+                bekle(300);
             }
         }
     }

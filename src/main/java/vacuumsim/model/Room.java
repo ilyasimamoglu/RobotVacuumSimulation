@@ -87,6 +87,19 @@ public class Room {
         izgara[0][0] = HucreTuru.SARJ_ISTASYONU;
     }
 
+    public boolean odadaTemizlenmemisAlanVarMi() {
+        for (int y = 0; y < satirSayisi; y++) {
+            for (int x = 0; x < sutunSayisi; x++) {
+                HucreTuru tur = izgara[y][x];
+                if (tur == HucreTuru.TEMIZ || tur == HucreTuru.TOZ || 
+                    tur == HucreTuru.SIVI || tur == HucreTuru.LEKE) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // Sadece yerdeki tüm kirleri (Toz, Sıvı, Leke) kaldırır. Mobilyaları (engelleri) korur.
     public void kirleriTemizle() {
         for (int satir = 0; satir < satirSayisi; satir++) {
@@ -227,6 +240,26 @@ public class Room {
             }
             setHucreTuru(6, 4, HucreTuru.SIVI);
             setHucreTuru(10, 13, HucreTuru.LEKE);
+        } else if (duzenIsmi.equals("Ulaşılamaz Alan")) {
+            // Sağ alt tarafta kapalı bir kutu oluşturuyoruz (izole alan)
+            // Yatay duvar
+            for (int x = 14; x <= 20; x++) {
+                setHucreTuru(x, 9, HucreTuru.ENGEL);
+            }
+            // Dikey duvar
+            for (int y = 9; y <= 17; y++) {
+                setHucreTuru(14, y, HucreTuru.ENGEL);
+            }
+            
+            // Kutunun içine kir yerleştir (Ulaşılamaz kirler)
+            setHucreTuru(17, 13, HucreTuru.LEKE);
+            setHucreTuru(18, 14, HucreTuru.TOZ);
+            
+            // Kutunun dışındaki serbest alana da normal temizlenebilir kirler yerleştir
+            setHucreTuru(5, 5, HucreTuru.TOZ);
+            setHucreTuru(8, 12, HucreTuru.SIVI);
+            setHucreTuru(12, 4, HucreTuru.TOZ);
+            setHucreTuru(2, 10, HucreTuru.LEKE);
         }
     }
 }

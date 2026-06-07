@@ -1,0 +1,10 @@
+# Prevent Git from converting line endings in audio and image files
+*.wav binary
+*.mp3 binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.jar binary
+*.zip binary
+*.pkg binary

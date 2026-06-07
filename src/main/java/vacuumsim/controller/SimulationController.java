@@ -54,7 +54,7 @@ public class SimulationController {
         cmbKirTuru.getItems().addAll("Toz", "Sıvı", "Leke");
         cmbKirTuru.getSelectionModel().selectFirst();
  
-        cmbOdaDuzeni.getItems().addAll("Boş Oda", "Oturma Odası", "Çok Odalı Daire", "Labirent");
+        cmbOdaDuzeni.getItems().addAll("Boş Oda", "Oturma Odası", "Çok Odalı Daire", "Labirent", "Ulaşılamaz Alan");
         cmbOdaDuzeni.getSelectionModel().selectFirst();
 
         // 1. Ressamı (View) Kur ve Haritayı Çizdir

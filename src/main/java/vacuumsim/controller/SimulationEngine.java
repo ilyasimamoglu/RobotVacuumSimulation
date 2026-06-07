@@ -117,8 +117,13 @@ public class SimulationEngine {
                 List<int[]> kalanTemizlenmemis = pathfinder.bfsEnYakinTemizlenmemisBul();
                 if (kalanTemizlenmemis == null || kalanTemizlenmemis.isEmpty()) {
                     oyunDongusu.stop();
-                    System.out.println("Simülasyon Bitti: Tüm oda temizlendi ve robot şarj istasyonuna döndü.");
-                    SesYonetici.oynatTemizlikBitti();
+                    if (oda.odadaTemizlenmemisAlanVarMi()) {
+                        System.out.println("Simülasyon Bitti: Ulaşılamaz alanlar var, temizlik yarım kaldı!");
+                    } else {
+                        System.out.println("Simülasyon Bitti: Tüm oda temizlendi ve robot şarj istasyonuna döndü.");
+                        SesYonetici.oynatTemizlikBitti();
+                    }
+                    SesYonetici.oynatSarjOluyor();
                 } else {
                     SesYonetici.oynatSarjOluyor();
                 }
@@ -154,10 +159,15 @@ public class SimulationEngine {
                             robot.setY(adim[1]);
                             return;
                         } else {
-                            // Eğer hiç temizlenmemiş alan kalmadıysa otomatik şarj istasyonuna geri dön
-                            System.out.println("Tüm oda temizlendi! Şarj istasyonuna dönülüyor.");
+                            // Eğer hiç temizlenmemiş alan kalmadıysa veya ulaşılamıyorsa otomatik şarj istasyonuna geri dön
+                            if (oda.odadaTemizlenmemisAlanVarMi()) {
+                                System.out.println("Ulaşılamaz alanlar algılandı! Şarj istasyonuna dönülüyor.");
+                                SesYonetici.oynatUlasilamazAlanAlgilandi();
+                            } else {
+                                System.out.println("Tüm oda temizlendi! Şarj istasyonuna dönülüyor.");
+                                SesYonetici.oynatSarjaDonuyor();
+                            }
                             istasyonaDon();
-                            SesYonetici.oynatSarjaDonuyor();
                             // Zaten istasyondaysak simülasyonu hemen durdur (Batarya dalgalanmasını ve log tekrarını önler)
                             if (robot.getX() == istasyon.getX() && robot.getY() == istasyon.getY()) {
                                 oyunDongusu.stop();
